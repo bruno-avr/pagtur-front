@@ -3,7 +3,6 @@
 import DefaultAPI from "@/services/API/DefaultAPI";
 import Requester from "@/services/Requester/Requester";
 import LoginForm from "./components/login-form";
-import Navbar from "./components/navbar";
 // import {useEffect} from "react"
 
 export async function login(username: string, password: string) {
@@ -19,6 +18,19 @@ export default async function Home() {
   let error;
 
   return (
-    <Navbar />
+    <div className="container-xxl">
+      <section className="vh-100">
+        <div className="container-fluid h-custom h-100">
+          <div className="row d-flex justify-content-center align-items-center h-100">
+            <div className="col-md-9 col-lg-6 col-xl-5">
+              <img src="logo.png" className="img-fluid" alt="Logo" />
+            </div>
+            <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+              <LoginForm />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
