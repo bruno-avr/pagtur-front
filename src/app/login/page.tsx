@@ -3,7 +3,6 @@
 import DefaultAPI from "@/services/API/DefaultAPI";
 import Requester from "@/services/Requester/Requester";
 import LoginForm from "./login-form";
-// import {useEffect} from "react"
 
 export async function login(username: string, password: string) {
   const api = new DefaultAPI(Requester);
@@ -11,12 +10,7 @@ export async function login(username: string, password: string) {
   return response;
 }
 
-export default async function Home() {
-  // useEffect(() => {}, [])
-  // console.log(toast)
-  // const poss = await prisma.user.findUnique();
-  let error;
-
+export default async function Login() {
   return (
     <div className="container-xxl">
       <section className="vh-100">

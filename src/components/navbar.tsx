@@ -7,7 +7,16 @@ import { useGlobalContext } from "../context/store";
 
 export default function Navbar() {
   const pathname = usePathname();
-  if (pathname === '/login' || pathname === '/signin') return null;
+  if (pathname === '/login') return null;
+  if (pathname === '/signin') return (
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="/">
+          <img src="/logo.png" alt="Bootstrap" height="24" />
+        </a>
+      </div>
+    </nav>
+  );
 
   const { user, setUser } = useGlobalContext();
 
@@ -36,7 +45,7 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">Home</a>
+              <a className="nav-link active" aria-current="page" href="#">{user.username}</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">{'kkk'+pathname+'kkk'}</a>

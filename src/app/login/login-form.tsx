@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useGlobalContext } from "@/context/store";
 
 export default function LoginForm() {
-  const { user, setUser } = useGlobalContext();
+  const { setUser } = useGlobalContext();
 
   async function submit (formData: FormData) {
     let user = null;
@@ -41,7 +41,7 @@ export default function LoginForm() {
       </div>
 
       <div className="text-center">
-        <p>Ainda não tem uma conta? <a href="/register">Registrar</a></p>
+        <p>Ainda não tem uma conta? <a href="/signin">Registrar</a></p>
       </div>
     </form>
   )

@@ -4,6 +4,8 @@ import {createContext, useContext, Dispatch, SetStateAction,useState, useEffect}
 
 type User = {
     accessToken: string,
+    id: string,
+    type: string,
     name: string,
     username: string
 }
