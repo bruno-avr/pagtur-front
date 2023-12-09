@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import "bootstrap/dist/css/bootstrap.min.css";
-import './globals.css'
 import { Toaster } from 'react-hot-toast';
-import { JotaiProvider } from './store';
+import { GlobalContextProvider } from '../context/store';
+import Navbar from '../components/navbar';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,13 +17,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
       <body className={inter.className}>
-        <JotaiProvider>
-          <Toaster />
+        <Toaster />
+        <GlobalContextProvider>
+          <Navbar />
           {children}
-        </JotaiProvider>
+        </GlobalContextProvider>
       </body>
     </html>
   )

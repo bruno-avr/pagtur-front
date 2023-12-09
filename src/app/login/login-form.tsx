@@ -1,26 +1,27 @@
 "use client"
 
 import { redirect } from "next/navigation";
-import { login } from "../page";
+import { login } from "./page";
 import toast from "react-hot-toast";
+import { useGlobalContext } from "@/context/store";
 
-export default async function LoginForm() {
+export default function LoginForm() {
+  const { user, setUser } = useGlobalContext();
+
   async function submit (formData: FormData) {
+    let user = null;
     try {
       const username = formData.get("username") as string;
       const password = formData.get("password") as string;
 
-      const user = await login(username, password);
-      localStorage.setItem("accessToken", user.accessToken);
-      localStorage.setItem("username", user.username);
-      localStorage.setItem("name", user.name);
-      localStorage.setItem("type", user.type);
-      localStorage.setItem("id", user.id);
+      user = await login(username, password);
     } catch (error: any) {
       toast.error(error.message);
       return;
     }
-    redirect('/home');
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+    redirect(`/`);
   }
 
   return (

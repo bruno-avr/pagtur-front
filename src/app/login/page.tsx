@@ -2,7 +2,7 @@
 
 import DefaultAPI from "@/services/API/DefaultAPI";
 import Requester from "@/services/Requester/Requester";
-import LoginForm from "./components/login-form";
+import LoginForm from "./login-form";
 // import {useEffect} from "react"
 
 export async function login(username: string, password: string) {
