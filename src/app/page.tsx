@@ -1,21 +1,33 @@
+'use client'
 
-import UserAPI from "@/services/API/UserAPI";
-import Navbar from "../components/navbar";
-import { RequesterClass } from "@/services/Requester/Requester";
 import { useGlobalContext } from "../context/store";
-import { useEffect } from "react";
-
-// export async function getUser(accessToken: string) {
-//   const requester = new RequesterClass(accessToken)
-//   const api = new UserAPI(requester);
-//   const response = await api.getUser();
-//   return response;
-// }
 
 export default function Home() {
-  // console.log(toast)
-  // const poss = await prisma.user.findUnique();
-  return (
-    <></>
-  )
+  const { user } = useGlobalContext();
+  if (user?.type === 'DRIVER') {
+    return (
+      <div className="container mt-5">
+        <div className="row">
+          <div className="col-sm-6 mb-3 mb-sm-0">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Cadastrar escolas</h5>
+                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="/schools" className="btn btn-primary">Ir para serviço</a>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Special title treatment</h5>
+                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" className="btn btn-primary">Ir para serviço</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }

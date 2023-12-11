@@ -6,7 +6,7 @@ export type SigninUser = {
   password: string
 }
 
-export type SigninAddress = {
+export type Address = {
   street: string,
   number: string,
   complement: string,
@@ -29,14 +29,13 @@ export default class DefaultAPI {
       throw new Error(response.data.errors);
     }
   
-    async signin(user: SigninUser, address: SigninAddress) {
+    async signin(user: SigninUser, address: Address) {
       const response = await this.requester.post('/user', {
         ...user,
         address: {
           create: address
         }
       });
-      console.log(response)
       if (response.status === 201) return response.data;
       throw new Error(response.data.errors);
     }
