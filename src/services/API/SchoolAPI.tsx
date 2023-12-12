@@ -1,5 +1,5 @@
 import { RequesterClass } from "../Requester/Requester";
-import { Address } from "./DefaultAPI";
+import { Address } from "./UserAPI";
 
 export type AddSchool = {
   name: string,

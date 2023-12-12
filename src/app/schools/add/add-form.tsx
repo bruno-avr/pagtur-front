@@ -33,7 +33,7 @@ export default function AddForm() {
 
   return (
     <form action={submit}>
-      <div className="container row g-3 mt-2">
+      <div className="container row g-4 mt-2">
         <div className="col-md-6">
           <label className="form-label" htmlFor="name">Nome da escola:</label>
           <input id="name" name="name" className="form-control" />
@@ -78,7 +78,7 @@ export default function AddForm() {
         </div>
 
         <div className="d-grid gap-2">
-          <button type="submit" className="btn btn-primary btn-block mb-4">Adicionar</button>
+          <button type="submit" className="btn btn-success btn-block mb-4">Adicionar</button>
         </div>
       </div>
     </form>

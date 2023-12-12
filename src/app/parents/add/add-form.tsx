@@ -1,15 +1,14 @@
 "use client"
 
 import { redirect } from "next/navigation";
-import { signin } from "./page";
+import { addUser } from "./page";
 import toast from "react-hot-toast";
 import { useGlobalContext } from "@/context/store";
 
-export default function SigninForm() {
-  const { setUser } = useGlobalContext();
+export default function AddForm() {
+  const { user } = useGlobalContext();
 
   async function submit (formData: FormData) {
-    let user = null;
     try {
       const newUser = {
         name: formData.get("name") as string,
@@ -27,19 +26,17 @@ export default function SigninForm() {
         postalCode: formData.get("postalCode") as string
       }
 
-      user = await signin(newUser, newAddress);
+      await addUser(user?.accessToken || '', newUser, newAddress);
     } catch (error: any) {
       toast.error(error.message);
       return;
     }
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
-    redirect(`/`);
+    redirect(`/parents`);
   }
 
   return (
     <form action={submit}>
-      <div className="container row g-3">
+      <div className="container row g-4 mt-2">
         <div className="col-md-12">
           <label className="form-label" htmlFor="name">Nome:</label>
           <input id="name" name="name" className="form-control" />
@@ -92,10 +89,6 @@ export default function SigninForm() {
 
         <div className="d-grid gap-2">
           <button type="submit" className="btn btn-primary btn-block mb-4">Registrar</button>
-        </div>
-
-        <div className="text-center">
-          <p>Já tem uma conta? <a href="/login">Entrar</a></p>
         </div>
       </div>
     </form>

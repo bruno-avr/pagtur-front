@@ -39,10 +39,6 @@ export default function LoginForm() {
       <div className="d-grid gap-2">
         <button type="submit" className="btn btn-primary btn-block mb-4">Entrar</button>
       </div>
-
-      <div className="text-center">
-        <p>Ainda não tem uma conta? <a href="/signin">Registrar</a></p>
-      </div>
     </form>
   )
 }

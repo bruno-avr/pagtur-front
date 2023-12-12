@@ -12,7 +12,7 @@ export async function login(username: string, password: string) {
 
 export default async function Login() {
   return (
-    <div className="container-xxl">
+    <div className="container-xxl bg-white">
       <section className="vh-100">
         <div className="container-fluid h-custom h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">

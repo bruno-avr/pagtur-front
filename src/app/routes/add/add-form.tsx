@@ -64,10 +64,10 @@ export default function AddForm() {
   const times = generateTimes();
 
   const timeComponent = (name: string, thisTime: string, setTime: (time: string) => void) => (
-    <div className="col-md-6 row">
-      <label htmlFor="departureTime">{name}:</label>
-      <div className="btn-group">
-        <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <div className="col-6">
+      <label htmlFor="departureTime">{`${name}:`}&nbsp;&nbsp;</label>
+      <div className="btn-group ml-5">
+        <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           {thisTime}
         </button>
         <ul className="dropdown-menu dropdown-menu-end">
@@ -79,10 +79,10 @@ export default function AddForm() {
 
   return (
     <form action={submit}>
-      <div className="container row g-3 mt-2">
+      <div className="container row g-4 mt-2">
         {timeComponent('Horário da ida', departureTime, setDepartureTime)}
         {timeComponent('Horário da volta', returnTime, setReturnTime)}
-        <div className="col-md-12">
+        <div className="col-12">
           <label className="form-label">Escolas selecionadas:</label>
           <ul className="list-group">
             {schools.map(school => (
@@ -94,7 +94,7 @@ export default function AddForm() {
           </ul>
         </div>
         <div className="d-grid gap-2">
-          <button type="submit" className="btn btn-primary btn-block mb-4">Adicionar</button>
+          <button type="submit" className="btn btn-success btn-block mb-4">Adicionar</button>
         </div>
       </div>
     </form>

@@ -1,5 +1,4 @@
 import { RequesterClass } from "../Requester/Requester";
-import { Address } from "./DefaultAPI";
 import { School } from "./SchoolAPI";
 
 export type AddRoute = {
