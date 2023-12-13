@@ -8,7 +8,6 @@ export async function getParents(token: string) {
   const requester = new RequesterClass(token);
   const api = new ParentAPI(requester);
   const response = await api.getParents();
-  console.log(response)
   return response;
 }
 

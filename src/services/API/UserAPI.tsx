@@ -16,6 +16,13 @@ export type Address = {
   postalCode: string
 }
 
+export type User = {
+  name: string,
+  username: string,
+  id: string,
+  address: Address
+}
+
 export default class UserAPI {
     requester: RequesterClass;
 
@@ -23,8 +30,8 @@ export default class UserAPI {
       this.requester = requester;
     }
   
-    async getUser() {
-      const response = await this.requester.get(`/user`);
+    async getUser(userId: string) {
+      const response = await this.requester.get(`/user/${userId}`);
       if (response.status === 200) return response.data;
       throw new Error(response.data.errors);
     }

@@ -38,16 +38,17 @@ export default function Navbar() {
 
   const currPaths = user ? paths.driver : paths.parent;
 
-  const pathnames = pathname.slice(1).split('/');
+  const pathnamesStr = pathname.slice(1).split('/');
+  const pathnames = pathname.slice(1).split('/').map((path, index) => ({ name: path, index })).filter(path => pathsDict[`/${path.name}`]);
   const lastPathname = pathnames.pop();
   
   return (
     <div>
-      <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+      <nav className="navbar sticky-top navbar-dark bg-dark navbar-expand-lg">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/">
+          <Link className="navbar-brand" href="/">
             <img src="/white_logo.png" alt="pagtur" height="24" />
-          </a>
+          </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -55,31 +56,31 @@ export default function Navbar() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               {currPaths.map(path => (
                 <li className="nav-item">
-                  <a className={`nav-link${pathname.substring(0, path.name.length) === path.name ? ' active' : ''}`} href={path.name}>
+                  <Link className={`nav-link${pathname.substring(0, path.name.length) === path.name ? ' active' : ''}`} href={path.name}>
                     <FontAwesomeIcon
                       icon={path.icon}
                     />
                     &nbsp;&nbsp; 
                     {pathsDict[path.name]}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             <span className="navbar-text">
-                <Link className="nav-link" href="/login" onClick={signout}>
-                  <FontAwesomeIcon
-                    icon={faDoorOpen}
-                  />
-                  &nbsp;&nbsp; 
-                  Sair
-                </Link>
+              <Link className="nav-link" href="/login" onClick={signout}>
+                <FontAwesomeIcon
+                  icon={faDoorOpen}
+                />
+                &nbsp;&nbsp; 
+                Sair
+              </Link>
             </span>
           </div>
         </div>
       </nav>
       {!!lastPathname && (
         <div>
-          <div className="container pt-4 pb-4">
+          <div className="container pt-3 pb-2">
             <div className="row">
               <div className="col-8">
                 <h5>
@@ -89,21 +90,29 @@ export default function Navbar() {
                     />
                   </Link>
                   {' /'}
-                  {pathnames.map((path, index) => (
+                  {pathnames.map((path) => (
                     <>
                     {' '}
                     <Link
-                      href={`/${pathnames.slice(0, index+1).join('/')}`}
+                      href={`/${pathnamesStr.slice(0, path.index+1).join('/')}`}
                       className="text-dark"
                       style={{textDecoration: 'none'}}
                     >
-                      {pathsDict[`/${path}`]}
+                      {pathsDict[`/${path.name}`]}
                     </Link>
                     {' /'}
                     </>
                   ))}
                 </h5>
-                <h1>{pathsDict[`/${lastPathname}`]}</h1>
+                <h1>
+                  <Link
+                    href={`/${pathnamesStr.slice(0, lastPathname.index+1).join('/')}`}
+                    className="text-dark"
+                    style={{textDecoration: 'none'}}
+                  >
+                    {pathsDict[`/${lastPathname.name}`]}
+                  </Link>
+                </h1>
               </div>
               {hasAddButton.has(pathname) && (
                 <div className="col-4 d-flex justify-content-end align-items-center">
