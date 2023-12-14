@@ -2,18 +2,17 @@
 
 import { RequesterClass } from "@/services/Requester/Requester";
 import AddForm from "./add-form";
-import SchoolAPI, { AddSchool } from "@/services/API/SchoolAPI";
-import { Address } from "@/services/API/UserAPI";
+import ContractAPI, { AddContract } from "@/services/API/ContractAPI";
 import Breadcrumb from "@/components/breadcrumb";
 
-export async function addSchool(token: string, school: AddSchool, address: Address) {
+export async function addContract(token: string, contract: AddContract) {
   const requester = new RequesterClass(token);
-  const api = new SchoolAPI(requester);
-  const response = await api.addSchool(school, address);
+  const api = new ContractAPI(requester);
+  const response = await api.addContract(contract);
   return response;
 }
 
-export default async function AddSchool() {
+export default async function AddContract() {
   return (
     <Breadcrumb>
       <div className="container-xxl bg-white pt-4 pb-4">

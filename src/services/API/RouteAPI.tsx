@@ -25,6 +25,13 @@ export default class RouteAPI {
       throw new Error(response.data.errors);
     }
   
+  
+    async getRoutesPerSchool(schoolId: string) {
+      const response = await this.requester.get(`/route`);
+      if (response.status === 200) return response.data.routes as Route[];
+      throw new Error(response.data.errors);
+    }
+  
     async addRoute(route: AddRoute, schoolIds:  string[]) {
       const response = await this.requester.post('/route', {
         ...route,

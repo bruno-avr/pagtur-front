@@ -4,6 +4,7 @@ import { RequesterClass } from "@/services/Requester/Requester";
 import Content from "./content"
 import ParentAPI from "@/services/API/UserAPI";
 import ContractAPI from "@/services/API/ContractAPI";
+import Breadcrumb from "@/components/breadcrumb";
 
 export async function getParent(token: string, userId: string) {
   const requester = new RequesterClass(token);
@@ -19,12 +20,8 @@ export async function getContracts(token: string) {
   return response;
 }
 
-export default async function Parent({ params }: { params: { id: string }}) {
+export default async function Parent() {
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <Content parentId={params.id} />
-      </div>
-    </div>
+    <Content />
   )
 }

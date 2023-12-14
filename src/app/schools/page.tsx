@@ -3,6 +3,7 @@
 import { RequesterClass } from "@/services/Requester/Requester";
 import SchoolCards from "./school-cards";
 import SchoolAPI from "@/services/API/SchoolAPI";
+import Breadcrumb from "@/components/breadcrumb";
 
 export async function getSchools(token: string) {
   const requester = new RequesterClass(token);
@@ -13,10 +14,12 @@ export async function getSchools(token: string) {
 
 export default async function Schools() {
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <SchoolCards />
+    <Breadcrumb hasAddButton>
+      <div className="container mt-5">
+        <div className="row">
+          <SchoolCards />
+        </div>
       </div>
-    </div>
+    </Breadcrumb>
   )
 }

@@ -22,14 +22,21 @@ export default function SchoolCards() {
   }, []);
 
   return parents.map(parent => (
-    <Link href={`/parents/${parent.id}`} className="col-sm-4 mb-3" style={{ textDecoration: 'none' }}>
+    <div className="col-sm-4 mb-3">
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{parent.name}</h5>
           {/* <p className="card-text">{parent.phone}</p> */}
         </div>
+        <Link
+          className="btn btn-dark"
+          href={`/parents/${parent.id}/contracts`}
+          style={{ textDecoration: 'none' }}
+        >
+          Acessar contratos
+        </Link>
       </div>
-    </Link>
+    </div>
   ))
   
 }

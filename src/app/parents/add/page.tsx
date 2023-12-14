@@ -3,6 +3,7 @@
 import { RequesterClass } from "@/services/Requester/Requester";
 import AddForm from "./add-form";
 import UserAPI, { AddUser, Address } from "@/services/API/UserAPI";
+import Breadcrumb from "@/components/breadcrumb";
 
 export async function addUser(token: string, user: AddUser, address: Address) {
   const requester = new RequesterClass(token);
@@ -13,12 +14,14 @@ export async function addUser(token: string, user: AddUser, address: Address) {
 
 export default async function AddUser() {
   return (
-    <div className="container-xxl bg-white pt-4 pb-4">
-      <div className="container-fluid h-custom h-100 align-items">
-        <div className="d-flex justify-content-center">
-            <AddForm />
+    <Breadcrumb>
+      <div className="container-xxl bg-white pt-4 pb-4">
+        <div className="container-fluid h-custom h-100 align-items">
+          <div className="d-flex justify-content-center">
+              <AddForm />
+          </div>
         </div>
       </div>
-    </div>
+    </Breadcrumb>
   )
 }

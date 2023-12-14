@@ -3,6 +3,7 @@
 import { RequesterClass } from "@/services/Requester/Requester";
 import AddForm from "./add-form";
 import RouteAPI, { AddRoute } from "@/services/API/RouteAPI";
+import Breadcrumb from "@/components/breadcrumb";
 
 export async function addRoute(token: string, route: AddRoute, schoolIds: string[]) {
   const requester = new RequesterClass(token);
@@ -13,12 +14,14 @@ export async function addRoute(token: string, route: AddRoute, schoolIds: string
 
 export default async function AddRoute() {
   return (
-    <div className="container-xxl bg-white pt-4 pb-4">
-      <div className="container-fluid h-custom h-100 align-items">
-        <div className="d-flex justify-content-center">
-          <AddForm />
+    <Breadcrumb>
+      <div className="container-xxl bg-white pt-4 pb-4">
+        <div className="container-fluid h-custom h-100 align-items">
+          <div className="d-flex justify-content-center">
+            <AddForm />
+          </div>
         </div>
       </div>
-    </div>
+    </Breadcrumb>
   )
 }
