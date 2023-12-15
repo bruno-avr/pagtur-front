@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useGlobalContext } from "../context/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign, faDoorOpen, faRoute, faSchool, faUsers } from "@fortawesome/free-solid-svg-icons";
-import Breadcrumb from "./breadcrumb";
 
 export default function Navbar() {
   const pathname = usePathname();

@@ -8,6 +8,7 @@ import Navbar from '../components/navbar';
 import "@fortawesome/fontawesome-svg-core/styles.css"; 
 
 import { config } from "@fortawesome/fontawesome-svg-core";
+import Footer from '@/components/footer';
 config.autoAddCss = false; 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -25,11 +26,14 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-light`}>
+      <body className={`${inter.className} bg-white vh-100 d-flex flex-column`}>
         <Toaster />
         <GlobalContextProvider>
           <Navbar />
-          {children}
+            <div className="flex-grow-1">
+              {children}
+            </div>
+          <Footer />
         </GlobalContextProvider>
       </body>
     </html>

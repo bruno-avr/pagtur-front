@@ -9,7 +9,8 @@ export type AddRoute = {
 export type Route = {
   departureTime: string,
   returnTime: string,
-  schools: School[]
+  schools: School[],
+  id: string
 }
 
 export default class RouteAPI {

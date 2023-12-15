@@ -7,14 +7,16 @@ import { useGlobalContext } from "@/context/store";
 import { useEffect, useState } from "react";
 import { getSchools } from "@/app/schools/page";
 import { School } from "@/services/API/SchoolAPI";
+import Loading from "@/components/loading";
 
 export default function AddForm() {
   const { user } = useGlobalContext();
 
   const [schools, setSchools] = useState([] as School[]);
-  const [departureTime, setDepartureTime] = useState('8:00');
-  const [returnTime, setReturnTime] = useState('12:00');
+  const [departureTime, setDepartureTime] = useState('08:00');
+  const [returnTime, setReturnTime] = useState('08:00');
   const [selectedSchools, setSelectedSchools] = useState([] as string[]);
+  const [loading, setLoading] = useState(true);
 
   async function submit () {
     try {
@@ -34,6 +36,7 @@ export default function AddForm() {
   const getData = async () => {
     const data = await getSchools(user?.accessToken || '');
     setSchools(data);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -61,9 +64,7 @@ export default function AddForm() {
     return horarios;
   }
 
-  const times = generateTimes();
-
-  const timeComponent = (name: string, thisTime: string, setTime: (time: string) => void) => (
+  const timeComponent = (name: string, thisTime: string, times: string[], setTime: (time: string) => void) => (
     <div className="col-6">
       <label htmlFor="departureTime">{`${name}:`}&nbsp;&nbsp;</label>
       <div className="btn-group ml-5">
@@ -76,14 +77,17 @@ export default function AddForm() {
       </div>
     </div>
   )
+  
+  const times = generateTimes();
 
   return (
     <form action={submit}>
       <div className="container row g-4 mt-2">
-        {timeComponent('Horário da ida', departureTime, setDepartureTime)}
-        {timeComponent('Horário da volta', returnTime, setReturnTime)}
+        {timeComponent('Horário da ida', departureTime, times, (t) => {setDepartureTime(t); setReturnTime(t)})}
+        {timeComponent('Horário da volta', returnTime, times.filter(t => t >= departureTime), setReturnTime)}
         <div className="col-12">
           <label className="form-label">Escolas selecionadas:</label>
+          {loading ? <Loading /> : (
           <ul className="list-group">
             {schools.map(school => (
               <li className="list-group-item">
@@ -92,6 +96,7 @@ export default function AddForm() {
               </li>
             ))}
           </ul>
+          )}
         </div>
         <div className="d-grid gap-2">
           <button type="submit" className="btn btn-success btn-block mb-4">Adicionar</button>
