@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { getParent } from "../page";
 import { deactivateContract, getContract } from "./page";
 import Loading from "@/components/loading";
+import toast from "react-hot-toast";
 
 export default function ContractDetails() {
   const { contractId } = useParams() as { parentId: string, contractId: string };
@@ -56,11 +57,16 @@ export default function ContractDetails() {
   if (!contract) return null;
 
   const handleDeactivation = async () => {
-    await deactivateContract(user.accessToken, contract.id);
-    setContract(curr => ({...curr, active: false} as Contract))
+    try {
+      await deactivateContract(user.accessToken, contract.id);
+      setContract(curr => ({...curr, active: false} as Contract))
+      toast.success('Contrato desativado');
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
-  const getModal = () => (
+  const getDeactivationModal = () => (
     <div className="modal fade" id="confirmDeactivation" tabIndex={-1} aria-labelledby="confirmDeactivationLabel" aria-hidden="true">
       <div className="modal-dialog">
         <div className="modal-content">
@@ -81,10 +87,43 @@ export default function ContractDetails() {
     </div>
   )
 
+  const getPaymentModal = () => (
+    <div className="modal fade" id="recordPayment" tabIndex={-1} aria-labelledby="recordPaymentLabel" aria-hidden="true">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h1 className="modal-title fs-5" id="recordPaymentLabel">Registrar pagamento</h1>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div className="modal-body">
+            Tem certeza que deseja desativar esse contrato?<br />
+            Essa ação não poderá ser revertida.
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeactivation}>Desativar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <div className="container">
-      {getModal()}
-      <h2 className="mb-5">Detalhes do contrato</h2>
+      {getDeactivationModal()}
+      {getPaymentModal()}
+      <div className="row">
+        <div className="col-6">
+          <h2 className="mb-5">Detalhes do contrato</h2>
+        </div>
+        {!!contract.active && (
+          <div className="col-6 justify-content-end d-flex">
+            <div>
+              <button type="button" className="btn btn-success btn-block mb-4" data-bs-toggle="modal" data-bs-target="#recordPayment">Registrar pagamento</button>
+            </div>
+          </div>
+        )}
+      </div>
       
       <div className="card">
         <div className="card-body">

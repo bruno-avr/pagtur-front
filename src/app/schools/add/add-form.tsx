@@ -78,7 +78,7 @@ export default function AddForm() {
         </div>
 
         <div className="d-grid gap-2">
-          <button type="submit" className="btn btn-success btn-block mb-4">Adicionar</button>
+          <button type="submit" className="btn btn-success btn-block mb-4 mt-3">Adicionar escola</button>
         </div>
       </div>
     </form>

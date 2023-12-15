@@ -65,7 +65,7 @@ export default function AddForm() {
   }
 
   return (
-    <form action={submit}>
+    <form action={submit} className="w-100 justify-content-center d-flex">
       <div className="container row g-4 mt-2">
         <div className="col-12">
           <label>Criando novo contrato para: {parent.name}</label>
@@ -111,7 +111,7 @@ export default function AddForm() {
           </div>
   
           <div className="d-grid gap-2">
-            <button type="submit" className="btn btn-primary btn-block mb-4">Adicionar contrato</button>
+            <button type="submit" className="btn btn-success btn-block mb-4 mt-3">Adicionar contrato</button>
           </div>
           </>
         )}
