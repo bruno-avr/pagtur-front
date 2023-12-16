@@ -14,10 +14,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { AddPayment } from "@/services/API/PaymentAPI";
 
-export default function ContractDetails() {
+export default function ContractDetails({ isParent } : { isParent?: boolean }) {
   const { contractId } = useParams() as { parentId: string, contractId: string };
   const { user } = useGlobalContext();
-  if (user?.type !== 'DRIVER') return <h1 className="text-center">Acesso negado!</h1>
+  if ((isParent && user?.type !== 'PARENT') || (!isParent && user?.type !== 'DRIVER') || !user) return <h1 className="text-center">Acesso negado!</h1>
 
   const paymentMethods = [
     {name: 'PIX', id: 'PIX'},
@@ -25,9 +25,21 @@ export default function ContractDetails() {
     {name: 'Dinheiro físico', id: 'CASH'}
   ]
 
+  const now = new Date();
+  const day = ("0" + now.getDate()).slice(-2);
+  const month = ("0" + (now.getMonth() + 1)).slice(-2);
+  const today = now.getFullYear()+"-"+(month)+"-"+(day);
+
+  const timeZoneDate = (date: Date | null) => {
+    if (!date) return null;
+    const timeZoneOffset = -3 * 60; // Brasília Time is UTC-3
+    date.setMinutes(date.getMinutes() - timeZoneOffset);
+    return date;
+  }
+
   const [contract, setContract] = useState(null as Contract | null);
   const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState(null as null | Date);
+  const [date, setDate] = useState(timeZoneDate(new Date(today)) as null | Date);
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
   const [referringMonth, setReferringMonth] = useState('');
   const [possibleMonths, setPossibleMonths] = useState([] as string[]);
@@ -111,7 +123,7 @@ export default function ContractDetails() {
     try {
       if (!user || !contract) throw new Error('Usuário ou contrato não encontrados')
       const newPayment = {
-        date: new Date(formData.get('paymentDate') as string),
+        date,
         method: paymentMethod.id,
         referringMonth,
         value: contract.monthlyPayment
@@ -178,7 +190,7 @@ export default function ContractDetails() {
                 <div className="container row g-4 mt-2">
                   <div className="col-md-6">
                     <label className="form-label" htmlFor="paymentDate">Data do pagamento:</label>
-                    <input type="date" id="paymentDate" name="paymentDate" className="form-control" required onChange={(d) => setDate(d.target.valueAsDate)} />
+                    <input type="date" id="paymentDate" name="paymentDate" className="form-control" defaultValue={today} required onChange={(d) => setDate(timeZoneDate(d.target.valueAsDate))} />
                   </div>
           
                   <div className="col-md-6">
@@ -254,7 +266,7 @@ export default function ContractDetails() {
             <strong>Mensalidade:</strong> {formatCurrency(contract.monthlyPayment)}
           </p>
           <p className="card-text">
-            <strong>Start Date:</strong> {new Date(contract.startDate).toLocaleDateString('pt-BR')}
+            <strong>Início do contrato:</strong> {new Date(contract.startDate).toLocaleDateString('pt-BR')}
           </p>
           <p className="card-text">
             <strong>Status: <label className={contract.active ? 'text-success' : 'text-danger'}>{contract.active ? 'Ativo' : 'Inativo'}</label></strong>
@@ -281,10 +293,10 @@ export default function ContractDetails() {
         <div className="card-body">
           <h4 className="card-title mb-4">Informações do responsável</h4>
           <p className="card-text">
-            <strong>Name:</strong> {contract.parent.name}
+            <strong>Nome:</strong> {contract.parent.name}
           </p>
           <p className="card-text">
-            <strong>Username:</strong> {contract.parent.username}
+            <strong>Nome de usuário:</strong> {contract.parent.username}
           </p>
           <p className="card-text">
             <strong>Endereço:</strong> {formatAddress(contract.parent.address)}
@@ -335,7 +347,7 @@ export default function ContractDetails() {
         </div>
       </div>
       
-      {!!contract.active && (
+      {!!contract.active && !isParent && (
         <div className="d-flex justify-content-center mt-5">
           <div className="d-grid col-6">
             <button type="button" className="btn btn-danger btn-block mb-4" data-bs-toggle="modal" data-bs-target="#confirmDeactivation">Desativar contrato</button>

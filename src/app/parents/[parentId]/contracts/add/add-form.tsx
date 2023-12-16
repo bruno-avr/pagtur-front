@@ -43,6 +43,13 @@ export default function AddForm() {
     setRoutes(res);
   }
 
+  const timeZoneDate = (date: Date | null) => {
+    if (!date) return null;
+    const timeZoneOffset = -3 * 60; // Brasília Time is UTC-3
+    date.setMinutes(date.getMinutes() - timeZoneOffset);
+    return date;
+  }
+
   async function submit (formData: FormData) {
     try {
       if (!school) throw new Error('Escolha uma escola.');
@@ -50,7 +57,7 @@ export default function AddForm() {
       const contract = {
         student: formData.get('student'),
         monthlyPayment: Number(formData.get('monthlyPayment')),
-        startDate: new Date(formData.get('startDate') as string),
+        startDate: timeZoneDate(new Date(formData.get('startDate') as string)),
         parentId,
         routeId: route.id,
         schoolId: school?.id

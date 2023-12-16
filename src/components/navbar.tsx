@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useGlobalContext } from "../context/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDollarSign, faDoorOpen, faRoute, faSchool, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faDollarSign, faDoorOpen, faFileArchive, faFileContract, faRoute, faSchool, faUsers } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -16,7 +16,8 @@ export default function Navbar() {
     '/schools': 'Escolas',
     '/routes': 'Rotas',
     '/parents': 'Responsáveis',
-    '/finances': 'Financeiro'
+    '/finances': 'Financeiro',
+    '/contracts': 'Contratos'
   } as {[key: string]: string}
 
   const paths = {
@@ -27,11 +28,11 @@ export default function Navbar() {
       { name: '/finances', icon: faDollarSign }
     ],
     parent: [
-
+      { name: '/contracts', icon: faFileContract },
     ]
   }
 
-  const currPaths = user ? paths.driver : paths.parent;
+  const currPaths = user?.type === 'DRIVER' ? paths.driver : paths.parent;
   
   return (
     <nav className="navbar sticky-top navbar-dark bg-dark navbar-expand-lg">
