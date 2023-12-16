@@ -2,6 +2,7 @@ import { RequesterClass } from "../Requester/Requester";
 import { User } from "./UserAPI";
 import { School } from "./SchoolAPI";
 import { Route } from "./RouteAPI";
+import { Payment } from "./PaymentAPI";
 
 export type AddContract = {
   student: string
@@ -24,14 +25,6 @@ export type Contract = {
   school: School
   
   payments: Payment[]
-}
-
-export type Payment = {
-  id: string,
-  date: Date,
-  value: number,
-  method: 'PIX' | 'CREDIT_CARD' | 'CASH',
-  referringMonth: string
 }
 
 export default class ContractAPI {

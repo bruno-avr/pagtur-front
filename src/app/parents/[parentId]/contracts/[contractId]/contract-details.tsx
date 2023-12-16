@@ -7,17 +7,30 @@ import { Contract } from "@/services/API/ContractAPI";
 import { useGlobalContext } from "@/context/store";
 import { useParams } from "next/navigation";
 import { getParent } from "../page";
-import { deactivateContract, getContract } from "./page";
+import { addPayment, deactivateContract, getContract } from "./page";
 import Loading from "@/components/loading";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { AddPayment } from "@/services/API/PaymentAPI";
 
 export default function ContractDetails() {
   const { contractId } = useParams() as { parentId: string, contractId: string };
   const { user } = useGlobalContext();
   if (user?.type !== 'DRIVER') return <h1 className="text-center">Acesso negado!</h1>
 
+  const paymentMethods = [
+    {name: 'PIX', id: 'PIX'},
+    {name: 'Cartão de crédito', id: 'CREDIT_CARD'},
+    {name: 'Dinheiro físico', id: 'CASH'}
+  ]
+
   const [contract, setContract] = useState(null as Contract | null);
   const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(null as null | Date);
+  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
+  const [referringMonth, setReferringMonth] = useState('');
+  const [possibleMonths, setPossibleMonths] = useState([] as string[]);
 
   const getData = async () => {
     const dataContract = await getContract(user.accessToken, contractId) as Contract;
@@ -28,6 +41,13 @@ export default function ContractDetails() {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    if (contract) {
+      const months = iterateMonths();
+      setPossibleMonths(months);
+    }
+  }, [contract]);
 
   if (loading) return <Loading />
 
@@ -61,7 +81,7 @@ export default function ContractDetails() {
       await deactivateContract(user.accessToken, contract.id);
       setContract(curr => ({...curr, active: false} as Contract))
       toast.success('Contrato desativado');
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message);
     }
   }
@@ -87,22 +107,116 @@ export default function ContractDetails() {
     </div>
   )
 
+  async function handleAddPayment (formData: FormData) {
+    try {
+      if (!user || !contract) throw new Error('Usuário ou contrato não encontrados')
+      const newPayment = {
+        date: new Date(formData.get('paymentDate') as string),
+        method: paymentMethod.id,
+        referringMonth,
+        value: contract.monthlyPayment
+      } as AddPayment
+
+      const payment = await addPayment(user.accessToken, contract.id, newPayment);
+      setContract(c => {
+        const payments = [...(c as Contract).payments]
+        payments.push(payment)
+        payments.sort((a,b) => ('' + a.referringMonth).localeCompare(b.referringMonth))
+        return ({
+          ...c,
+          payments
+        }) as Contract;
+      });
+      setReferringMonth('');
+      toast.success('Pagamento registrado com sucesso');
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
+  function iterateMonths() {
+    if (!contract) return []
+    const startDate = new Date(contract.startDate)
+    const currentDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1)) //one year from now
+    let currentMonth = startDate.getMonth();
+    let currentYear = startDate.getFullYear();
+  
+    const resultArray = [] as string[];
+  
+    while (
+      currentYear < currentDate.getFullYear() ||
+      (currentYear === currentDate.getFullYear() && currentMonth <= currentDate.getMonth())
+    ) {
+      const monthYearString = `${(currentMonth + 1).toString().padStart(2, '0')}/${currentYear}`;
+  
+      if (!contract.payments.find(p => p.referringMonth === monthYearString)) {
+        resultArray.push(monthYearString);
+      }
+  
+      if (currentMonth === 11) {
+        currentMonth = 0;
+        currentYear++;
+      } else {
+        currentMonth++;
+      }
+    }
+  
+    return resultArray;
+  }
+
   const getPaymentModal = () => (
     <div className="modal fade" id="recordPayment" tabIndex={-1} aria-labelledby="recordPaymentLabel" aria-hidden="true">
-      <div className="modal-dialog">
+      <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="recordPaymentLabel">Registrar pagamento</h1>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div className="modal-body">
-            Tem certeza que deseja desativar esse contrato?<br />
-            Essa ação não poderá ser revertida.
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeactivation}>Desativar</button>
-          </div>
+          <form action={handleAddPayment}>
+            <div className="modal-body">
+              <div className="w-100 justify-content-center d-flex">
+                <div className="container row g-4 mt-2">
+                  <div className="col-md-6">
+                    <label className="form-label" htmlFor="paymentDate">Data do pagamento:</label>
+                    <input type="date" id="paymentDate" name="paymentDate" className="form-control" required onChange={(d) => setDate(d.target.valueAsDate)} />
+                  </div>
+          
+                  <div className="col-md-6">
+                    <label className="form-label" htmlFor="paymentValue">Valor da mensalidade (R$):</label>
+                    <input type="number" id="paymentValue" name="paymentValue" className="form-control" value={contract.monthlyPayment} required disabled />
+                  </div>
+                  
+                  <div className="col-md-6">
+                    <label className="form-label" htmlFor="method">Método de pagamento:</label><br />
+                    <div className="btn-group ml-5">
+                      <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {paymentMethod.name}
+                      </button>
+                      <ul className="dropdown-menu">
+                        {paymentMethods.map(m => (<li><button type="button" className="dropdown-item" onClick={() => setPaymentMethod(m)}>{m.name}</button></li>))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label" htmlFor="referringMonth">Mês de referência:</label><br />
+                    <div className="btn-group ml-5">
+                      <button type="button" className="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {referringMonth ? referringMonth : 'Selecionar mês'}
+                      </button>
+                      <ul className="dropdown-menu">
+                        {possibleMonths.map(m => (<li><button type="button" className="dropdown-item" onClick={() => setReferringMonth(m)}>{m}</button></li>))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" className="btn btn-success" data-bs-dismiss="modal" disabled={!date || !referringMonth}>Adicionar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -116,10 +230,15 @@ export default function ContractDetails() {
         <div className="col-6">
           <h2 className="mb-5">Detalhes do contrato</h2>
         </div>
-        {!!contract.active && (
+        {!!contract.active && !!possibleMonths.length && (
           <div className="col-6 justify-content-end d-flex">
             <div>
-              <button type="button" className="btn btn-success btn-block mb-4" data-bs-toggle="modal" data-bs-target="#recordPayment">Registrar pagamento</button>
+              <button type="button" className="btn btn-success btn-block mb-4" data-bs-toggle="modal" data-bs-target="#recordPayment">
+                <FontAwesomeIcon
+                  icon={faPlus}
+                />
+                {' Registrar pagamento'}
+              </button>
             </div>
           </div>
         )}
