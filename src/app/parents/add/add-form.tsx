@@ -7,6 +7,7 @@ import { useGlobalContext } from "@/context/store";
 
 export default function AddForm() {
   const { user } = useGlobalContext();
+  if (user?.type !== 'DRIVER') return <h1 className="text-center">Acesso negado!</h1>
 
   async function submit (formData: FormData) {
     try {

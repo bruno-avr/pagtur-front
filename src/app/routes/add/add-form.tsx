@@ -11,6 +11,7 @@ import Loading from "@/components/loading";
 
 export default function AddForm() {
   const { user } = useGlobalContext();
+  if (user?.type !== 'DRIVER') return <h1 className="text-center">Acesso negado!</h1>
 
   const [schools, setSchools] = useState([] as School[]);
   const [departureTime, setDepartureTime] = useState('08:00');

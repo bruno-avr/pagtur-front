@@ -12,7 +12,7 @@ import Loading from "@/components/loading";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { AddPayment } from "@/services/API/PaymentAPI";
+import { AddPayment, Payment } from "@/services/API/PaymentAPI";
 
 export default function ContractDetails({ isParent } : { isParent?: boolean }) {
   const { contractId } = useParams() as { parentId: string, contractId: string };
@@ -118,6 +118,13 @@ export default function ContractDetails({ isParent } : { isParent?: boolean }) {
       </div>
     </div>
   )
+  
+  function compareDates(a: Payment, b: Payment) {
+    const dateA = new Date(a.referringMonth.replace(/(\d{2})\/(\d{4})/, "$2-$1"));
+    const dateB = new Date(b.referringMonth.replace(/(\d{2})\/(\d{4})/, "$2-$1"));
+  
+    return dateB.getTime() - dateA.getTime();
+  }
 
   async function handleAddPayment (formData: FormData) {
     try {
@@ -133,7 +140,7 @@ export default function ContractDetails({ isParent } : { isParent?: boolean }) {
       setContract(c => {
         const payments = [...(c as Contract).payments]
         payments.push(payment)
-        payments.sort((a,b) => ('' + a.referringMonth).localeCompare(b.referringMonth))
+        payments.sort(compareDates)
         return ({
           ...c,
           payments

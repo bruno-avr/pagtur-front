@@ -34,4 +34,10 @@ export default class PaymentAPI {
       if (response.status === 201) return response.data as Payment;
       throw new Error(response.data.errors);
     }
+
+    async getData() {
+      const response = await this.requester.get('/payment/data');
+      if (response.status === 200) return response.data;
+      throw new Error(response.data.errors);
+    }
   }
