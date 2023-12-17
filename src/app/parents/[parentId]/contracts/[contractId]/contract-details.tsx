@@ -126,14 +126,15 @@ export default function ContractDetails({ isParent } : { isParent?: boolean }) {
     return dateB.getTime() - dateA.getTime();
   }
 
-  async function handleAddPayment (formData: FormData) {
+  async function handleAddPayment () {
     try {
       if (!user || !contract) throw new Error('Usuário ou contrato não encontrados')
       const newPayment = {
         date,
         method: paymentMethod.id,
         referringMonth,
-        value: contract.monthlyPayment
+        value: contract.monthlyPayment,
+        confirmant: user.type
       } as AddPayment
 
       const payment = await addPayment(user.accessToken, contract.id, newPayment);
@@ -337,6 +338,7 @@ export default function ContractDetails({ isParent } : { isParent?: boolean }) {
                   <th>Valor</th>
                   <th>Método</th>
                   <th>Pago em</th>
+                  <th>Confirmado por</th>
                 </tr>
               </thead>
               <tbody>
@@ -346,6 +348,7 @@ export default function ContractDetails({ isParent } : { isParent?: boolean }) {
                     <td>{formatCurrency(payment.value)}</td>
                     <td>{paytmentMethodDict[payment.method]}</td>
                     <td>{new Date(payment.date).toLocaleDateString('pt-BR')}</td>
+                    <td>{payment.confirmant === 'DRIVER' ? 'Motorista' : 'Responsável'}</td>
                   </tr>
                 ))}
               </tbody>

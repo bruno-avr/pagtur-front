@@ -4,7 +4,8 @@ export type AddPayment = {
   date: Date,
   value: number,
   method: 'PIX' | 'CREDIT_CARD' | 'CASH',
-  referringMonth: string
+  referringMonth: string,
+  confirmant: 'DRIVER' | 'PARENT'
 }
 
 export type Payment = {
@@ -12,7 +13,8 @@ export type Payment = {
   date: Date,
   value: number,
   method: 'PIX' | 'CREDIT_CARD' | 'CASH',
-  referringMonth: string
+  referringMonth: string,
+  confirmant: 'DRIVER' | 'PARENT'
 }
 
 export default class PaymentAPI {
